@@ -83,15 +83,15 @@ exports.handler = async (event) => {
         throw new Error("Invalid configuration, make sure MYSQL_HOST, MYSQL_USER, MYSQL_DATABASE and MYSQL_PASSWORD are set.");
     }
 
-    try {
+    db.configure({
+        host: process.env.MYSQL_HOST,
+        user: process.env.MYSQL_USER,
+        password: process.env.MYSQL_PASSWORD,
+        database: process.env.MYSQL_DATABASE,
+        timeout: 5 * 60 * 1000 /* 5 minutes */
+    });
 
-        db.configure({
-            host: process.env.MYSQL_HOST,
-            user: process.env.MYSQL_USER,
-            password: process.env.MYSQL_PASSWORD,
-            database: process.env.MYSQL_DATABASE,
-            timeout: 5 * 60 * 1000 /* 5 minutes */
-        });
+    try {
 
         console.log("Connected to database");
 
@@ -133,7 +133,7 @@ exports.handler = async (event) => {
     }
     finally {
         console.log("Closing database connection.");
-        db.end();
     }
+    db.end();
 
 }

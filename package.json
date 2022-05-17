@@ -15,7 +15,6 @@
   "author": "Marnix Kok",
   "license": "Apache-2.0",
   "dependencies": {
-    "aws-sdk": "^2.1136.0",
     "mysql-promise": "^5.0.0",
     "mocha": "^10.0.0"
   }

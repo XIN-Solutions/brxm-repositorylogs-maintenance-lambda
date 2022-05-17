@@ -75,7 +75,7 @@ async function outputTableSizes(db, dbName) {
  * The main handler that is invoked when the scheduled event hits the lambda.
  *
  * @param event
- * @returns {Promise<void>}
+ * @returns {Promise<string>}
  */
 exports.handler = async (event) => {
 
@@ -112,21 +112,13 @@ exports.handler = async (event) => {
         console.log("Completed Journal Maintenance.");
         console.log("New table sizes:", JSON.stringify(newTableSizes, null, 4));
 
-        const snsArn = process.env.SNS_ARN;
-        if (!snsArn) {
-            return;
-        }
+        const msg = [
+            "Completed ONE Church brXM maintenance task\n",
+            "", "**Previous Table Sizes:**", JSON.stringify(originalTableSizes, null, 4),
+            "", "**New Table Sizes**", JSON.stringify(newTableSizes, null, 4)
+        ].join("\n");
 
-        console.log("Sending SNS");
-        await SNS.publish({
-            Message: [
-                "Completed ONE Church brXM maintenance task\n",
-                "", "**Previous Table Sizes:**", JSON.stringify(originalTableSizes, null, 4),
-                "", "**New Table Sizes**", JSON.stringify(newTableSizes, null, 4)
-            ].join("\n"),
-            TopicArn: snsArn
-        }).promise();
-
+        return msg;
     }
     catch (err) {
         console.error("Something went wrong trying to clean up the repository, caused by: ", err);
@@ -135,5 +127,4 @@ exports.handler = async (event) => {
         console.log("Closing database connection.");
     }
     db.end();
-
 }

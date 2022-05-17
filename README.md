@@ -27,6 +27,7 @@ It will execute the following queries:
     FROM REPOSITORY_LOCAL_REVISIONS);
 
     OPTIMIZE TABLE REPOSITORY_JOURNAL;
+    OPTIMIZE TABLE DATASTORE;
 
 
 ## Deploy

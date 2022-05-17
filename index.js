@@ -43,6 +43,32 @@ async function optimiseRepositoryJournal(db) {
     console.log(" .. done!");
 }
 
+
+async function optimiseDatastore(db) {
+    console.log("Optimising the Datastore Table (get rid of orphaned binaries)");
+    await db.query(`OPTIMIZE TABLE DATASTORE`);
+    console.log(" .. done!");
+}
+
+
+async function outputTableSizes(db, dbName) {
+    const query = `
+        SELECT  
+            TABLE_NAME as TableName,   
+            ROUND((DATA_LENGTH + INDEX_LENGTH) / 1024 / 1024) AS TableSize
+        FROM information_schema.TABLES 
+        WHERE TABLE_SCHEMA = "${dbName}"
+        ORDER BY (DATA_LENGTH + INDEX_LENGTH) DESC
+    `;
+
+    const [rows, output] = await db.query(query);
+    const tableMap = {};
+    for (const row of rows) {
+        tableMap[row.TableName] = `${row.TableSize} mb`;
+    }
+    return tableMap;
+}
+
 /**
  * The main handler that is invoked when the scheduled event hits the lambda.
  *
@@ -67,17 +93,29 @@ exports.handler = async (event) => {
 
         console.log("Connected to database");
 
+        // make sure we can query at all
         await db.query("SELECT 1");
+
+        // get sizes of tables before clean up starts
+        const originalTableSizes = await outputTableSizes(db, process.env.MYSQL_DATABASE);
+        console.log("Original Table sizes:", JSON.stringify(originalTableSizes, null, 4));
+
+        // do clean up tasks
         await removeOldRevisions(db);
         await optimiseRepositoryJournal(db);
+        await optimiseDatastore(db);
 
+        // get new sizes of tables after clean up complete.
+        const newTableSizes = await outputTableSizes(db, process.env.MYSQL_DATABASE);
         console.log("Completed Journal Maintenance.");
+        console.log("New table sizes:", JSON.stringify(newTableSizes, null, 4));
 
     }
     catch (err) {
         console.error("Something went wrong trying to clean up the repository, caused by: ", err);
     }
     finally {
+        console.log("Closing database connection.");
         db.end();
     }
 

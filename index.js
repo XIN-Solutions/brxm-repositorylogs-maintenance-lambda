@@ -68,12 +68,10 @@ exports.handler = async (event) => {
         console.log("Connected to database");
 
         await db.query("SELECT 1");
+        await removeOldRevisions(db);
+        await optimiseRepositoryJournal(db);
 
-        //
-        // await removeOldRevisions(db);
-        // await optimiseRepositoryJournal(db);
-        //
-        // console.log("Completed Journal Maintenance.");
+        console.log("Completed Journal Maintenance.");
 
     }
     catch (err) {

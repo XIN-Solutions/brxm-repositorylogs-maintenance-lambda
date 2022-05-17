@@ -1,4 +1,4 @@
-# Repository Maintenance Lambda
+# Bloomreach XM Repository Maintenance Lambda
 
 This lambda code will help you clean your MySQL repository journal tables periodically as outlined as being required in 
 the documentation here: 
@@ -20,7 +20,6 @@ A cron statement could look like this if you wish to run it daily at 0:00 UTC
 
     cron(0 0 * * ? *)
 
-
 It will execute the following queries:
 
 
@@ -32,7 +31,7 @@ It will execute the following queries:
 
 ## Deploy
 
-To deploy the Lambda you could ZIP and deploy yourself, or use the Makefile by running:
+To deploy the Lambda you could ZIP and deploy yourself, or use the `Makefile` by running:
 
     .. make sure your AWS profile is correct ..
     $ export ARN=<arn of your lambda>

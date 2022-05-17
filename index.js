@@ -55,21 +55,32 @@ exports.handler = async (event) => {
         throw new Error("Invalid configuration, make sure MYSQL_HOST, MYSQL_USER, MYSQL_DATABASE and MYSQL_PASSWORD are set.");
     }
 
-    db.configure({
-        host: process.env.MYSQL_HOST,
-        user: process.env.MYSQL_USER,
-        password: process.env.MYSQL_PASSWORD,
-        database: process.env.MYSQL_DATABASE,
-        timeout: 5 * 60 * 1000 /* 5 minutes */
-    });
+    try {
 
-    console.log("Connected to database");
+        db.configure({
+            host: process.env.MYSQL_HOST,
+            user: process.env.MYSQL_USER,
+            password: process.env.MYSQL_PASSWORD,
+            database: process.env.MYSQL_DATABASE,
+            timeout: 5 * 60 * 1000 /* 5 minutes */
+        });
 
-    await removeOldRevisions(db);
-    await optimiseRepositoryJournal(db);
+        console.log("Connected to database");
 
-    console.log("Completed Journal Maintenance.");
+        await db.query("SELECT 1");
 
-    db.end();
+        //
+        // await removeOldRevisions(db);
+        // await optimiseRepositoryJournal(db);
+        //
+        // console.log("Completed Journal Maintenance.");
+
+    }
+    catch (err) {
+        console.error("Something went wrong trying to clean up the repository, caused by: ", err);
+    }
+    finally {
+        db.end();
+    }
 
 }

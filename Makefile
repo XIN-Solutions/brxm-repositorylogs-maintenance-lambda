@@ -12,7 +12,7 @@ deploy: zip
 	@echo "DANGER: Deploying to Production environment, are you sure? (CTRL-c to exit)"
 	@read _dontcare_
 	aws lambda update-function-code \
-		--function-name "$ARN" \
+		--function-name "${ARN}" \
 		--zip fileb://./target/lambda-bundle.zip \
 		--region ap-southeast-2 \
 		--publish

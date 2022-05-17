@@ -112,13 +112,7 @@ exports.handler = async (event, context, callback) => {
         console.log("Completed Journal Maintenance.");
         console.log("New table sizes:", JSON.stringify(newTableSizes, null, 4));
 
-        const msg = [
-            "Completed ONE Church brXM maintenance task\n",
-            "", "**Previous Table Sizes:**", JSON.stringify(originalTableSizes, null, 4),
-            "", "**New Table Sizes**", JSON.stringify(newTableSizes, null, 4)
-        ].join("\n");
-
-        return msg;
+        return "Completed brXM Maintenance Task";
     }
     catch (err) {
         console.error("Something went wrong trying to clean up the repository, caused by: ", err);

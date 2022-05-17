@@ -118,7 +118,7 @@ exports.handler = async (event, context, callback) => {
             "", "**New Table Sizes**", JSON.stringify(newTableSizes, null, 4)
         ].join("\n");
 
-        callback(msg);
+        return msg;
     }
     catch (err) {
         console.error("Something went wrong trying to clean up the repository, caused by: ", err);

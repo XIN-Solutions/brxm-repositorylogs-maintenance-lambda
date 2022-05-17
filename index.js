@@ -13,6 +13,8 @@
 
  */
 
+const AWS = require('aws-sdk');
+const SNS = new AWS.SNS({apiVersion: "2010-03-31"});
 const db = require('mysql-promise')();
 
 /**
@@ -109,6 +111,21 @@ exports.handler = async (event) => {
         const newTableSizes = await outputTableSizes(db, process.env.MYSQL_DATABASE);
         console.log("Completed Journal Maintenance.");
         console.log("New table sizes:", JSON.stringify(newTableSizes, null, 4));
+
+        const snsArn = process.env.SNS_ARN;
+        if (!snsArn) {
+            return;
+        }
+
+        console.log("Sending SNS");
+        await SNS.publish({
+            Message: [
+                "Completed ONE Church brXM maintenance task\n",
+                "", "**Previous Table Sizes:**", JSON.stringify(originalTableSizes, null, 4),
+                "", "**New Table Sizes**", JSON.stringify(newTableSizes, null, 4)
+            ].join("\n"),
+            TopicArn: snsArn
+        }).promise();
 
     }
     catch (err) {

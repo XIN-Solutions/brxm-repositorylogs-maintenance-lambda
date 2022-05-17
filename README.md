@@ -13,6 +13,7 @@ The lambda will require the following environment variables:
 * `MYSQL_DATABASE`: the database name of the instance
 * `MYSQL_USER`: the user to use for logging in
 * `MYSQL_PASSWORD`: the password to use to login. 
+* `SNS_ARN`: optional to send notification information
 
 Then setup an Cloudwatch Eventbridge to the Lambda so it is invoked daily.
 

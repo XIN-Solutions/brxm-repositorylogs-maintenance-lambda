@@ -77,7 +77,7 @@ async function outputTableSizes(db, dbName) {
  * @param event
  * @returns {Promise<string>}
  */
-exports.handler = async (event) => {
+exports.handler = async (event, context, callback) => {
 
     if (!completeConfiguration()) {
         throw new Error("Invalid configuration, make sure MYSQL_HOST, MYSQL_USER, MYSQL_DATABASE and MYSQL_PASSWORD are set.");
@@ -118,7 +118,7 @@ exports.handler = async (event) => {
             "", "**New Table Sizes**", JSON.stringify(newTableSizes, null, 4)
         ].join("\n");
 
-        return msg;
+        callback(msg);
     }
     catch (err) {
         console.error("Something went wrong trying to clean up the repository, caused by: ", err);

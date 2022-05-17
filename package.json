@@ -1,7 +1,7 @@
 {
   "name": "brxm-maintenance-lambda",
   "version": "1.0.0",
-  "description": "Executes JFR database maintenance operations",
+  "description": "Executes JCR database maintenance operations",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

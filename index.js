@@ -105,7 +105,7 @@ exports.handler = async (event, context, callback) => {
         // do clean up tasks
         await removeOldRevisions(db);
         await optimiseRepositoryJournal(db);
-        await optimiseDatastore(db);
+        // await optimiseDatastore(db);
 
         // get new sizes of tables after clean up complete.
         const newTableSizes = await outputTableSizes(db, process.env.MYSQL_DATABASE);

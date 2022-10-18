@@ -13,6 +13,7 @@
 
  */
 
+const fs = require('fs');
 const AWS = require('aws-sdk');
 const SNS = new AWS.SNS({apiVersion: "2010-03-31"});
 const db = require('mysql-promise')();
@@ -77,7 +78,7 @@ async function outputTableSizes(db, dbName) {
  * @param event
  * @returns {Promise<string>}
  */
-exports.handler = async (event, context, callback) => {
+async function run() {
 
     if (!completeConfiguration()) {
         throw new Error("Invalid configuration, make sure MYSQL_HOST, MYSQL_USER, MYSQL_DATABASE and MYSQL_PASSWORD are set.");
@@ -88,7 +89,11 @@ exports.handler = async (event, context, callback) => {
         user: process.env.MYSQL_USER,
         password: process.env.MYSQL_PASSWORD,
         database: process.env.MYSQL_DATABASE,
-        timeout: 5 * 60 * 1000 /* 5 minutes */
+        timeout: 5 * 60 * 1000 /* 5 minutes */,
+	ssl: process.env.MYSQL_CERT_PATH ? {
+		ca: fs.readFileSync(process.env.MYSQL_CERT_PATH)
+	} : undefined
+
     });
 
     try {
@@ -122,3 +127,8 @@ exports.handler = async (event, context, callback) => {
     }
     db.end();
 }
+
+run().then(() => {
+	console.log("Completed.");
+	process.exit(0)
+}).catch(err => console.error(err));

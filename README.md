@@ -12,10 +12,10 @@ The lambda will require the following environment variables:
 * `MYSQL_HOST`: the host at which the Bloomreach XM instance is stored
 * `MYSQL_DATABASE`: the database name of the instance
 * `MYSQL_USER`: the user to use for logging in
-* `MYSQL_PASSWORD`: the password to use to login. 
+* `MYSQL_PASSWORD`: the password to use to log in. 
 * `SNS_ARN`: optional to send notification information
 
-Then setup an Cloudwatch Eventbridge to the Lambda so it is invoked daily.
+Then configure a Cloudwatch Eventbridge to the Lambda, so it is invoked daily.
 
 A cron statement could look like this if you wish to run it daily at 0:00 UTC
 
@@ -39,4 +39,14 @@ To deploy the Lambda you could ZIP and deploy yourself, or use the `Makefile` by
     $ export ARN=<arn of your lambda>
     $ make deploy
 
+
+## User Docker Image
+
+Use the `xinsolutions/bloomreach-db-maintenance` image, it requires the following environment variables:
+
+* `CRON`: can set this up to run the janitor periodically
+* `MYSQL_HOST`: the host at which the Bloomreach XM instance is stored
+* `MYSQL_DATABASE`: the database name of the instance
+* `MYSQL_USER`: the user to use for logging in
+* `MYSQL_PASSWORD`: the password to use to log in.
 

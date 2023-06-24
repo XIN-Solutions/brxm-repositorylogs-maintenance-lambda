@@ -40,7 +40,7 @@ To deploy the Lambda you could ZIP and deploy yourself, or use the `Makefile` by
     $ make deploy
 
 
-## User Docker Image
+## Use Docker Image
 
 Use the `xinsolutions/bloomreach-db-maintenance` image, it requires the following environment variables:
 
@@ -50,3 +50,72 @@ Use the `xinsolutions/bloomreach-db-maintenance` image, it requires the followin
 * `MYSQL_USER`: the user to use for logging in
 * `MYSQL_PASSWORD`: the password to use to log in.
 
+If you want to run it from the CLI:
+
+    docker run \
+            --env CRON=0 0 * * * \
+            --env MYSQL_HOST=localhost --env MYSQL_USER=root \
+            --env MYSQL_DATABASE=brxm --env MYSQL_PASSWORD=test1234 \
+            --name brxm_maintenance \
+            xinsolutions/bloomreach-db-maintenance:latest
+
+You could add it to your `docker-compose.yml` like this:
+    
+    version: '3'
+    services:
+    
+      mysql:
+        image: xinsolutions/bloomreach-xinmods-mysql
+        stdin_open: true
+        tty: true
+        restart: always
+        environment:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    
+        volumes:
+          - mysql-data:/var/lib/mysql
+    
+    
+      brxm:
+        image: xinsolutions/bloomreach-xinmods-cms
+    
+        stdin_open: true
+        tty: true
+        restart: always
+    
+        environment:
+          - MYSQL_HOST=mysql
+          - MYSQL_DATABASE=bloomreach
+          - MYSQL_PORT=3306
+          - MYSQL_USERNAME=root
+          - MYSQL_PASSWORD=
+          - BRXM_CMS_HOST=http://bloomreach.local
+    
+        volumes:
+          - bloomreach-repo:/var/lib/hippostorage
+    
+        links:
+          - 'mysql'
+
+      maintenance:
+        image: xinsolutions/bloomreach-db-maintenance
+    
+        stdin_open: true
+        tty: true
+        restart: always
+    
+        environment:
+          - CRON=0 0 * * * 
+          - MYSQL_HOST=mysql
+          - MYSQL_DATABASE=bloomreach
+          - MYSQL_PORT=3306
+          - MYSQL_USERNAME=root
+          - MYSQL_PASSWORD=
+    
+        links:
+          - 'mysql'
+
+    
+    volumes:
+      bloomreach-repo:
+      mysql-data:

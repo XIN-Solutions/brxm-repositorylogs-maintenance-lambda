@@ -122,5 +122,6 @@ async function runMaintenance() {
 }
 
 module.exports = {
+    completeConfiguration,
     runMaintenance
 }

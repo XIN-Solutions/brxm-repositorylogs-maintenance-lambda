@@ -1,10 +1,18 @@
 const cron = require('node-cron');
-const {runMaintenance} = require("./maintenance");
+const {runMaintenance, completeConfiguration} = require("./maintenance");
 
 /**
  * Expression to run scheduled job with.
  */
 const cronExpression = process.env.CRON ?? '0 0 * * *';
+
+
+/**
+ * Make sure the configuration is complete.
+ */
+if (!completeConfiguration()) {
+    throw new Error("Invalid configuration, make sure MYSQL_HOST, MYSQL_USER, MYSQL_DATABASE and MYSQL_PASSWORD are set.");
+}
 
 console.log("[maintenance] Starting cron job for brXM maintenance tasks.")
 

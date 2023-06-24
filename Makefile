@@ -1,4 +1,4 @@
-%.PHONY: zip deploy
+%.PHONY: zip deploy docker-build docker-push
 
 zip:
 	@echo "Building application"
@@ -18,3 +18,10 @@ deploy: zip
 		--publish
 
 
+docker: docker-build docker-push
+
+docker-build:
+	docker build -t xinsolutions/bloomreach-db-maintenance .
+
+docker-push:
+	docker push xinsolutions/bloomreach-db-maintenance

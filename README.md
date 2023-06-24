@@ -111,7 +111,8 @@ You could add it to your `docker-compose.yml` like this:
           - MYSQL_PORT=3306
           - MYSQL_USERNAME=root
           - MYSQL_PASSWORD=
-    
+          - MYSQL_CERT_PATH=/var/whereyoukeepyourcert.cer
+
         links:
           - 'mysql'
 

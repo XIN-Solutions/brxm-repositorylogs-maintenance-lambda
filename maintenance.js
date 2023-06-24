@@ -13,6 +13,7 @@
 
  */
 
+const fs = require('fs');
 const db = require('mysql-promise')();
 
 /**
@@ -86,7 +87,10 @@ async function runMaintenance() {
         user: process.env.MYSQL_USER,
         password: process.env.MYSQL_PASSWORD,
         database: process.env.MYSQL_DATABASE,
-        timeout: 5 * 60 * 1000 /* 5 minutes */
+        timeout: 5 * 60 * 1000, /* 5 minutes */
+        ssl: process.env.MYSQL_CERT_PATH ? {
+            ca: fs.readFileSync(process.env.MYSQL_CERT_PATH)
+        } : undefined
     });
 
     try {

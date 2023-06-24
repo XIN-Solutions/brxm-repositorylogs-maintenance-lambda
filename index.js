@@ -29,5 +29,6 @@ exports.handler = async () => {
         console.log("Couldn't finish the maintenance, caused by:", err);
     }
 
-
+    console.log("Completed.");
+    process.exit(0);
 }

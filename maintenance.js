@@ -20,7 +20,7 @@ const db = require('mysql-promise')();
  * @return {boolean} true when all required environment variables are set.
  */
 function completeConfiguration() {
-    const envVars = ['MYSQL_HOST', 'MYSQL_USER', 'MYSQL_DATABASE', 'MYSQL_PASSWORD'];
+    const envVars = ['MYSQL_HOST', 'MYSQL_USER', 'MYSQL_DATABASE'];
 
     for (const envName of envVars) {
         if (!process.env[envName]) {
